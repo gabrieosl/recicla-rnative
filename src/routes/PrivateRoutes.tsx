@@ -36,7 +36,7 @@ export default function BottomTabNavigator() {
         name="Leaderboard"
         component={Leaderboard}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="award" color={color} />,
         }}
       />
     </BottomTab.Navigator>
