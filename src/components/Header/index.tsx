@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useAuth } from '../../context/Auth';
 import {
   Container,
   TitleContainer,
@@ -10,7 +11,9 @@ import {
 } from './styles';
 
 const Header: React.FC = () => {
-  const user = 'Solanea';
+  const auth = useAuth();
+
+  const { userName, signOut } = auth;
   const amountMonth = 498;
 
   return (
@@ -18,14 +21,14 @@ const Header: React.FC = () => {
       <TitleContainer>
         <Title>
           Olá&nbsp;
-          {user}
+          {userName}
         </Title>
         <SubTitle>
           {amountMonth}
           &nbsp; árvores salvas esse mês
         </SubTitle>
       </TitleContainer>
-      <LogoutButton>
+      <LogoutButton onPress={signOut}>
         <LogoutButtonText>Sair</LogoutButtonText>
       </LogoutButton>
     </Container>

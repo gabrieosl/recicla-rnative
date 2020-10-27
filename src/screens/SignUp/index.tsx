@@ -5,13 +5,13 @@ import {
   Platform,
   ScrollView,
   SafeAreaView,
-  // eslint-disable-next-line no-unused-vars
   TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// eslint-disable-next-line no-unused-vars
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
+
+import { useAuth } from '../../context/Auth';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -20,15 +20,27 @@ import backgroundImage from '../../assets/images/splash.png';
 
 import { Container, Background, Title } from './styles';
 
+interface SignUpData {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
+  const auth = useAuth();
+
   const formRef = useRef<FormHandles>(null);
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(data => {
-    console.log(data);
-  }, []);
+  const handleSignUp = useCallback(
+    (data: SignUpData) => {
+      const { name, email, password } = data;
+      auth.signUp(name, email, password);
+    },
+    [auth],
+  );
 
   return (
     <Container>

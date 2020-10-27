@@ -7,6 +7,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 
+import { useAuth } from '../../context/Auth';
+
 import Header from '../../components/Header';
 import AmountInput from '../../components/AmountInput';
 
@@ -24,9 +26,11 @@ import {
 const Home: React.FC = () => {
   const [inputValue, setInputValue] = useState('0');
 
-  const handleSubmit = useCallback(data => {
-    console.log(data);
-  }, []);
+  const { writeNewRecycling } = useAuth();
+
+  const handleSubmit = useCallback(() => {
+    writeNewRecycling(+inputValue);
+  }, [inputValue, writeNewRecycling]);
 
   const updateValue = useCallback((newValue: string) => {
     if (isNaN(+newValue)) return;
@@ -38,7 +42,7 @@ const Home: React.FC = () => {
       <Header />
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        // contentContainerStyle={{ flex: 1 }}
+        contentContainerStyle={{ flex: 1 }}
       >
         <Container>
           <KeyboardAvoidingView
@@ -59,8 +63,8 @@ const Home: React.FC = () => {
                 árvores salvas
               </SubmitCalcText>
             </SubmitButton>
+            <Image source={backgroundImage} resizeMode="contain" />
           </KeyboardAvoidingView>
-          <Image source={backgroundImage} resizeMode="contain" />
         </Container>
       </ScrollView>
     </SafeAreaView>

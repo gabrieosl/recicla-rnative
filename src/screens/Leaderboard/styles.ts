@@ -16,6 +16,7 @@ export const Title = styled.Text`
 export const StartDateMenu = styled.View`
   flex-direction: row;
   margin: 10px 0;
+  height: 30px;
 `;
 
 interface StartDateOptionProps {

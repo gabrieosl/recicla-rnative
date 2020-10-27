@@ -3,6 +3,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, SafeAreaView, View } from 'react-native';
 import { startOfWeek, startOfMonth } from 'date-fns';
 
+import { useAuth } from '../../context/Auth';
+
 import Header from '../../components/Header';
 
 import backgroundImage from '../../assets/images/splash.png';
@@ -29,6 +31,7 @@ interface ScoreData {
 }
 
 const Leaderboard: React.FC = () => {
+  const { getRecyclingsPerUser } = useAuth();
   const [selectedStartDate, setSelectedStartDate] = useState<
     'week' | 'month' | 'all'
   >('month');
@@ -41,6 +44,10 @@ const Leaderboard: React.FC = () => {
   }, [selectedStartDate]);
 
   useEffect(() => {
+    getRecyclingsPerUser(startDate).then(recyclings => {
+      const scores = [];
+      recyclings.reduce;
+    });
     setScores([
       {
         id: 'asdad',
@@ -70,7 +77,7 @@ const Leaderboard: React.FC = () => {
       <Header />
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        // contentContainerStyle={{ flex: 1 }}
+        contentContainerStyle={{ flex: 1 }}
       >
         <Container>
           <Title>Leaderboard</Title>
@@ -93,7 +100,6 @@ const Leaderboard: React.FC = () => {
             >
               <StartDateText>Tudo</StartDateText>
             </StartDateOption>
-            <StartDateText>{String(startDate)}</StartDateText>
           </StartDateMenu>
           <Table>
             <TableLine>
