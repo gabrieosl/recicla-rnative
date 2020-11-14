@@ -6,16 +6,18 @@ import 'firebase/firestore';
 
 const config = {
   apiKey: 'AIzaSyAj4I-j3R9JAONhkuE0yi7dE2HW-rN9NOk',
+  authDomain: 'recicla-d2c0f.firebaseapp.com',
+  databaseURL: 'https://recicla-d2c0f.firebaseio.com',
   projectId: 'recicla-d2c0f',
+  storageBucket: 'recicla-d2c0f.appspot.com',
+  messagingSenderId: '1024708658714',
   appId: '1:1024708658714:web:f30b2661f9c239f664b3a3',
-  // authDomain: "recicla-d2c0f.firebaseapp.com",
-  // databaseURL: "https://recicla-d2c0f.firebaseio.com",
-  // storageBucket: "recicla-d2c0f.appspot.com",
-  // messagingSenderId: "1024708658714",
 };
 
-interface DocumentData {
-  id: string;
+interface RecyclingData {
+  userId: string;
+  userName: string;
+  weightInGrams: number;
 }
 
 class Firebase {
@@ -36,7 +38,10 @@ class Firebase {
   }: {
     email: string;
     password: string;
-  }): Promise<string | null | undefined> {
+  }): Promise<{
+    loggedUserName: string | undefined | null;
+    loggedUserId: string | undefined | null;
+  }> {
     try {
       this.auth.signInWithEmailAndPassword(email, password);
     } catch (error) {
@@ -46,7 +51,10 @@ class Firebase {
       console.log(errorMessage);
     }
 
-    return this.auth.currentUser?.displayName;
+    return {
+      loggedUserName: this.auth.currentUser?.displayName,
+      loggedUserId: this.auth.currentUser?.uid,
+    };
   }
 
   public async signUpWithEmailAndPassword({
@@ -57,7 +65,10 @@ class Firebase {
     name: string;
     email: string;
     password: string;
-  }): Promise<string | null | undefined> {
+  }): Promise<{
+    loggedUserName: string | undefined | null;
+    loggedUserId: string | undefined | null;
+  }> {
     try {
       await this.auth.createUserWithEmailAndPassword(email, password);
       await this.auth.currentUser?.updateProfile({
@@ -69,7 +80,10 @@ class Firebase {
       console.log(errorCode);
       console.log(errorMessage);
     }
-    return this.auth.currentUser?.displayName;
+    return {
+      loggedUserName: name,
+      loggedUserId: this.auth.currentUser?.uid,
+    };
   }
 
   public signOut(): void {
@@ -101,7 +115,7 @@ class Firebase {
   public async readLatestDocumentsFromFirestore(
     collection: string,
     startDate: Date,
-  ): Promise<any[] | undefined> {
+  ): Promise<RecyclingData[] | undefined> {
     try {
       const documents = await this.database
         .collection(collection)

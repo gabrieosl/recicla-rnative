@@ -5,6 +5,8 @@ import { startOfWeek, startOfMonth } from 'date-fns';
 
 import { useAuth } from '../../context/Auth';
 
+import { gramsToTrees, gramsToWater } from '../../utils/conversion';
+
 import Header from '../../components/Header';
 
 import backgroundImage from '../../assets/images/splash.png';
@@ -45,32 +47,35 @@ const Leaderboard: React.FC = () => {
 
   useEffect(() => {
     getRecyclingsPerUser(startDate).then(recyclings => {
-      const scores = [];
-      recyclings.reduce;
+      console.log(recyclings);
+      if (!recyclings) return;
+      const scoresSumObject: { [key: string]: ScoreData } = {};
+      // eslint-disable-next-line no-plusplus
+      for (let x = 0; x < recyclings.length; x++) {
+        const item = recyclings[x];
+        if (scoresSumObject[item.userId]) {
+          scoresSumObject[item.userId].totalWeight += item.weightInGrams;
+        } else {
+          scoresSumObject[item.userId] = {} as ScoreData;
+          scoresSumObject[item.userId].totalWeight = item.weightInGrams;
+          scoresSumObject[item.userId].name = item.userName;
+        }
+      }
+      const scoresSumArray: ScoreData[] = [];
+      const keys = Object.keys(scoresSumObject);
+      // eslint-disable-next-line no-plusplus
+      for (let x = 0; x < keys.length; x++) {
+        const scoreData = scoresSumObject[keys[x]];
+        scoresSumArray.push({
+          id: keys[x],
+          name: scoreData.name,
+          totalWeight: scoreData.totalWeight,
+        });
+      }
+
+      setScores(scoresSumArray);
     });
-    setScores([
-      {
-        id: 'asdad',
-        name: 'Joao Silva',
-        totalWeight: 1510,
-      },
-      {
-        id: 'asdds4gsad',
-        name: 'Pedro Pereira',
-        totalWeight: 1224,
-      },
-      {
-        id: 'asdafasad',
-        name: 'Thiago Cardoso',
-        totalWeight: 922,
-      },
-      {
-        id: 'adwqsdad',
-        name: 'Paulino Serafim',
-        totalWeight: 121,
-      },
-    ]);
-  }, []);
+  }, [getRecyclingsPerUser, startDate]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -106,13 +111,19 @@ const Leaderboard: React.FC = () => {
               <View style={{ flex: 1 }} />
               <WeighText>papel (kg)</WeighText>
               <ScoreText>árvores</ScoreText>
+              <ScoreText>água (L)</ScoreText>
             </TableLine>
             {scores.map((score, index) => (
               <TableLine key={score.id}>
-                <PositionText>{`# ${index}`}</PositionText>
+                <PositionText>{`# ${index + 1}`}</PositionText>
                 <NameText>{score.name}</NameText>
-                <WeighText>{score.totalWeight}</WeighText>
-                <ScoreText>{score.totalWeight}</ScoreText>
+                <WeighText>{(score.totalWeight / 1000).toFixed(1)}</WeighText>
+                <ScoreText>
+                  {gramsToTrees(score.totalWeight).toFixed(1)}
+                </ScoreText>
+                <ScoreText>
+                  {gramsToWater(score.totalWeight).toFixed(1)}
+                </ScoreText>
               </TableLine>
             ))}
           </Table>

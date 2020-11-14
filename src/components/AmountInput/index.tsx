@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { TextInputProps } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
@@ -14,12 +14,16 @@ import {
   UnitText,
 } from './styles';
 
-const AmountInput: React.FC<TextInputProps> = ({
+interface AmountInputProps extends TextInputProps {
+  updateValue(newValue: string, valueType: 'count' | 'weight'): void;
+}
+const AmountInput: React.FC<AmountInputProps> = ({
   value = '0',
-  onChangeText,
+  updateValue,
   ...rest
 }) => {
   const [inputType, setInputType] = useState<'count' | 'weight'>('count');
+  const [inputValue, setInputValue] = useState('0');
   const [isFocused, setIsFocused] = useState(false);
 
   const isFilled = useMemo(() => !!+value, [value]);
@@ -29,12 +33,12 @@ const AmountInput: React.FC<TextInputProps> = ({
   );
 
   const handleIncrement = useCallback(() => {
-    onChangeText && onChangeText(String(+value + 1));
-  }, [onChangeText, value]);
+    setInputValue(String(+inputValue + 1));
+  }, [inputValue]);
 
   const handleDecrement = useCallback(() => {
-    if (+value && onChangeText) onChangeText(String(+value - 1));
-  }, [onChangeText, value]);
+    if (+inputValue) setInputValue(String(+inputValue - 1));
+  }, [inputValue]);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -43,6 +47,10 @@ const AmountInput: React.FC<TextInputProps> = ({
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
   }, []);
+
+  useEffect(() => {
+    updateValue(inputValue, inputType);
+  }, [inputValue, inputType, updateValue]);
 
   return (
     <Container>
@@ -74,10 +82,11 @@ const AmountInput: React.FC<TextInputProps> = ({
           <TextInput
             keyboardAppearance="default"
             placeholderTextColor="#ccc"
-            value={value}
-            onChangeText={onChangeText}
+            value={inputValue}
+            onChangeText={setInputValue}
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}
+            keyboardType="decimal-pad"
             {...rest}
           />
           <UnitText>{parsedInputTypeText}</UnitText>

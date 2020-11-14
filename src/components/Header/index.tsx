@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { useAuth } from '../../context/Auth';
+
+import { gramsToTrees } from '../../utils/conversion';
 import {
   Container,
   TitleContainer,
@@ -13,8 +15,7 @@ import {
 const Header: React.FC = () => {
   const auth = useAuth();
 
-  const { userName, signOut } = auth;
-  const amountMonth = 498;
+  const { userName, signOut, userTotalWeightInGrams } = auth;
 
   return (
     <Container>
@@ -24,7 +25,7 @@ const Header: React.FC = () => {
           {userName}
         </Title>
         <SubTitle>
-          {amountMonth}
+          {gramsToTrees(userTotalWeightInGrams).toFixed(1)}
           &nbsp; árvores salvas esse mês
         </SubTitle>
       </TitleContainer>

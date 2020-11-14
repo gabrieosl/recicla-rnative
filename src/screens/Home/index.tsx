@@ -6,8 +6,11 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
+import { toast } from 'react-toastify';
 
 import { useAuth } from '../../context/Auth';
+
+import { gramsToTrees, paperToGram } from '../../utils/conversion';
 
 import Header from '../../components/Header';
 import AmountInput from '../../components/AmountInput';
@@ -24,18 +27,27 @@ import {
 } from './styles';
 
 const Home: React.FC = () => {
-  const [inputValue, setInputValue] = useState('0');
+  const [inputValueInGrams, setInputValueInGrams] = useState('0');
 
   const { writeNewRecycling } = useAuth();
 
-  const handleSubmit = useCallback(() => {
-    writeNewRecycling(+inputValue);
-  }, [inputValue, writeNewRecycling]);
+  const handleSubmit = useCallback(async () => {
+    const result = await writeNewRecycling(+inputValueInGrams);
+    if (result) toast.success('Registrado com sucesso.');
+    console.log(`result: ${result}`);
+  }, [inputValueInGrams, writeNewRecycling]);
 
-  const updateValue = useCallback((newValue: string) => {
-    if (isNaN(+newValue)) return;
-    setInputValue(String(+newValue - 0));
-  }, []);
+  const updateValue = useCallback(
+    (newValue: string, valueType: 'count' | 'weight') => {
+      if (isNaN(+newValue)) return;
+      if (valueType === 'count') {
+        setInputValueInGrams(String(paperToGram(+newValue) - 0));
+      } else {
+        setInputValueInGrams(String(+newValue - 0));
+      }
+    },
+    [],
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -51,15 +63,11 @@ const Home: React.FC = () => {
             enabled
           >
             <Title>Quanto papel você reciclou hoje?</Title>
-            <AmountInput
-              value={inputValue}
-              onChangeText={updateValue}
-              keyboardType="decimal-pad"
-            />
+            <AmountInput updateValue={updateValue} />
             <SubmitButton onPress={handleSubmit}>
               <SubmitText>Enviar</SubmitText>
               <SubmitCalcText>
-                {`+ ${inputValue} `}
+                {`+ ${gramsToTrees(inputValueInGrams).toFixed(1)} `}
                 árvores salvas
               </SubmitCalcText>
             </SubmitButton>

@@ -10,6 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
+import { toast } from 'react-toastify';
 
 import { useAuth } from '../../context/Auth';
 
@@ -35,9 +36,11 @@ const SignUp: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
 
   const handleSignUp = useCallback(
-    (data: SignUpData) => {
+    async (data: SignUpData) => {
       const { name, email, password } = data;
-      auth.signUp(name, email, password);
+      const response = await auth.signUp(name, email, password);
+      if (response) toast.success('Sucesso.');
+      else toast.error('Algo deu errado. Tente novamente');
     },
     [auth],
   );
@@ -56,7 +59,7 @@ const SignUp: React.FC = () => {
           <SafeAreaView style={{ flex: 1 }}>
             <Background source={backgroundImage} />
             <View>
-              <Title>Faça seu logon</Title>
+              <Title>Cadastre-se</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
