@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 import { useAuth } from '../../context/Auth';
 
-import { gramsToTrees, paperToGram } from '../../utils/conversion';
+import { gramsToCarbonCredit, paperToGram } from '../../utils/conversion';
 
 import Header from '../../components/Header';
 import AmountInput from '../../components/AmountInput';
@@ -67,8 +67,8 @@ const Home: React.FC = () => {
             <SubmitButton onPress={handleSubmit}>
               <SubmitText>Enviar</SubmitText>
               <SubmitCalcText>
-                {`+ ${gramsToTrees(inputValueInGrams).toFixed(1)} `}
-                árvores salvas
+                {`+ ${gramsToCarbonCredit(+inputValueInGrams).toFixed(1)} `}
+                Credito(s) carbono
               </SubmitCalcText>
             </SubmitButton>
             <Image source={backgroundImage} resizeMode="contain" />

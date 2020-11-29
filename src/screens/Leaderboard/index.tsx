@@ -5,7 +5,7 @@ import { startOfWeek, startOfMonth } from 'date-fns';
 
 import { useAuth } from '../../context/Auth';
 
-import { gramsToTrees, gramsToWater } from '../../utils/conversion';
+import { gramsToCarbonCredit, gramToPaper } from '../../utils/conversion';
 
 import Header from '../../components/Header';
 
@@ -109,20 +109,18 @@ const Leaderboard: React.FC = () => {
           <Table>
             <TableLine>
               <View style={{ flex: 1 }} />
-              <WeighText>papel (kg)</WeighText>
-              <ScoreText>árvores</ScoreText>
-              <ScoreText>água (L)</ScoreText>
+              <WeighText>papel (folhas A4)</WeighText>
+              <ScoreText>Crédito Carbono</ScoreText>
             </TableLine>
             {scores.map((score, index) => (
               <TableLine key={score.id}>
                 <PositionText>{`# ${index + 1}`}</PositionText>
                 <NameText>{score.name}</NameText>
-                <WeighText>{(score.totalWeight / 1000).toFixed(1)}</WeighText>
+                <WeighText>
+                  {gramToPaper(score.totalWeight).toFixed(0)}
+                </WeighText>
                 <ScoreText>
-                  {gramsToTrees(score.totalWeight).toFixed(1)}
-                </ScoreText>
-                <ScoreText>
-                  {gramsToWater(score.totalWeight).toFixed(1)}
+                  {gramsToCarbonCredit(score.totalWeight).toFixed(1)}
                 </ScoreText>
               </TableLine>
             ))}

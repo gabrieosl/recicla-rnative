@@ -87,9 +87,9 @@ const SignIn: React.FC = () => {
                 returnKeyType="send"
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
-              <ForgotPassword>
+              {/* <ForgotPassword>
                 <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
-              </ForgotPassword>
+              </ForgotPassword> */}
               <Button
                 variant="filled"
                 onPress={() => formRef.current?.submitForm()}

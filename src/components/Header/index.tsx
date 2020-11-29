@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useAuth } from '../../context/Auth';
 
-import { gramsToTrees } from '../../utils/conversion';
+import { gramsToCarbonCredit } from '../../utils/conversion';
 import {
   Container,
   TitleContainer,
@@ -25,8 +25,8 @@ const Header: React.FC = () => {
           {userName}
         </Title>
         <SubTitle>
-          {gramsToTrees(userTotalWeightInGrams).toFixed(1)}
-          &nbsp; árvores salvas esse mês
+          {gramsToCarbonCredit(userTotalWeightInGrams).toFixed(1)}
+          &nbsp; Créditos Carbono esse mês
         </SubTitle>
       </TitleContainer>
       <LogoutButton onPress={signOut}>

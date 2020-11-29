@@ -61,7 +61,7 @@ export const NameText = styled.Text`
 
 export const WeighText = styled.Text`
   font-size: 16px;
-  width: 70px;
+  width: 80px;
   text-align: right;
 `;
 
